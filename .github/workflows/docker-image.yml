@@ -1,0 +1,39 @@
+name: Build and Push Docker Image to AWS ECR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Build löve file
+        run : |
+          zip -r pubsub.love main.lua conf.lua 
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+
+      - name: Log in to AWS ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t chess-pubsub .
+
+      - name: Tag Docker image
+        run: |
+          docker tag chess-pubsub:latest ${{ secrets.ECR_REPOSITORY }}/chess-pubsub:latest
+
+      - name: Push Docker image to AWS ECR
+        run: |
+          docker push ${{ secrets.ECR_REPOSITORY }}/chess-pubsub:latest
