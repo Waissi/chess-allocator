@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Build löve file
         run : |
           zip -r pubsub.love main.lua conf.lua 
