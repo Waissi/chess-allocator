@@ -43,6 +43,7 @@ local handle_event = {
             players[peer][#players[peer] + 1] = playerId
             return
         end
+        print "Initializing new game"
         players[peer] = players[peer] or {}
         players[peer][#players[peer] + 1] = playerId
         local randomNumber = rng:random(1, 2)
