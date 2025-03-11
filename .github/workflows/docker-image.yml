@@ -19,7 +19,7 @@ jobs:
 
       - name: Build löve file
         run : |
-          zip -r dispatcher.love main.lua conf.lua 
+          zip -r allocator.love main.lua conf.lua 
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -33,12 +33,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t chess-dispatcher .
+          docker build -t chess-allocator .
 
       - name: Tag Docker image
         run: |
-          docker tag chess-dispatcher:latest ${{ secrets.ECR_REPOSITORY }}/chess-dispatcher:latest
+          docker tag chess-allocator:latest ${{ secrets.ECR_REPOSITORY }}/chess-allocator:latest
 
       - name: Push Docker image to AWS ECR
         run: |
-          docker push ${{ secrets.ECR_REPOSITORY }}/chess-dispatcher:latest
+          docker push ${{ secrets.ECR_REPOSITORY }}/chess-allocator:latest
