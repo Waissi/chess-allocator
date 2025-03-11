@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
+  
 jobs:
   build-and-push:
     runs-on: ubuntu-22.04
@@ -15,15 +19,13 @@ jobs:
 
       - name: Build löve file
         run : |
-          zip -r pubsub.love main.lua conf.lua 
+          zip -r dispatcher.love main.lua conf.lua 
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
           aws-region: ${{ secrets.AWS_REGION }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
       - name: Log in to AWS ECR
         run: |
@@ -31,12 +33,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t chess-pubsub .
+          docker build -t chess-dispatcher .
 
       - name: Tag Docker image
         run: |
-          docker tag chess-pubsub:latest ${{ secrets.ECR_REPOSITORY }}/chess-pubsub:latest
+          docker tag chess-dispatcher:latest ${{ secrets.ECR_REPOSITORY }}/chess-dispatcher:latest
 
       - name: Push Docker image to AWS ECR
         run: |
-          docker push ${{ secrets.ECR_REPOSITORY }}/chess-pubsub:latest
+          docker push ${{ secrets.ECR_REPOSITORY }}/chess-dispatcher:latest
