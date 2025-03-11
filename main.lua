@@ -113,9 +113,11 @@ function love.update()
         if event.type == "receive" then
             handle_event[event.channel](event.data, event.peer)
         elseif event.type == "connect" then
+            print("Connecting with peer", event.peer)
             servers[#servers + 1] = event.peer
         elseif event.type == "disconnect" then
             for i, server in ipairs(servers) do
+                print("Disconnecting with peer", event.peer)
                 if event.peer == server then
                     table.remove(servers, i)
                     break
