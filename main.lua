@@ -13,11 +13,11 @@ local serverChannels = {
 }
 
 function love.load()
-    print "===== Starting Chess Dispatcher ====="
+    print "===== Starting Chess Allocator ====="
 end
 
 function love.quit()
-    print "===== Stoping Chess Dispatcher ====="
+    print "===== Stoping Chess Allocator ====="
 end
 
 local get_peer = function(playerId)
