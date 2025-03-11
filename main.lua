@@ -28,7 +28,7 @@ local get_peer = function(playerId)
     end
 end
 
---- channel 1 => dispatch new players |
+--- channel 1 => allocate new players |
 --- channel 2 => init new game |
 --- channel 3 => game update
 --- channel 4 => delete player
@@ -43,7 +43,6 @@ local handle_event = {
             players[peer][#players[peer] + 1] = playerId
             return
         end
-        print "Initializing new game"
         players[peer] = players[peer] or {}
         players[peer][#players[peer] + 1] = playerId
         local randomNumber = rng:random(1, 2)
@@ -54,6 +53,7 @@ local handle_event = {
         pendingPlayer.server:send("b" .. blackPlayer, serverChannels["init"])
         peer:send(gameId, serverChannels["new_game"])
         pendingPlayer = nil
+        print("Initialized new game: ", gameId)
     end,
 
     ---init new game
