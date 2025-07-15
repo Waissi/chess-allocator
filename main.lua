@@ -14,6 +14,8 @@ local serverChannels = {
 
 function love.load()
     print "===== Starting Chess Allocator ====="
+    local thread = love.thread.newThread("healthcheck.lua")
+    thread:start()
 end
 
 function love.quit()
