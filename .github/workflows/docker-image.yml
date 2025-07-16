@@ -19,7 +19,7 @@ jobs:
 
       - name: Build löve file
         run : |
-          zip -r allocator.love main.lua conf.lua 
+          zip -r allocator.love *.lua
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
